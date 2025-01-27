@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Starbucks Queue Simulation System</title>
+    <link rel="stylesheet" href="static/css/style.css">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <nav class="nav-header">
+        <div class="nav-container">
+            <a href="/" class="nav-logo">Simulation Studies</a>
+            <div class="nav-links">
+                <a href="index.html" class="active">Queue Simulation</a>
+                <a href="epidemic.html">Epidemic Simulation</a>
+            </div>
+        </div>
+    </nav>
+    
+    <header>
+        <h1>Starbucks Queue Simulation System</h1>
+    </header>
+    
+    <main>
+        <div class="simulation-container">
+            <div class="controls">
+                <h2>Simulation Parameters</h2>
+                <form id="simulation-form">
+                    <div class="form-group">
+                        <label for="arrival-rate">Customer Arrival Rate (customers/hour):</label>
+                        <input type="number" id="arrival-rate" name="arrival-rate" min="1" value="30">
+                    </div>
+                    <div class="form-group">
+                        <label for="service-rate">Service Rate (customers/hour):</label>
+                        <input type="number" id="service-rate" name="service-rate" min="1" value="20">
+                    </div>
+                    <div class="form-group">
+                        <label for="num-servers">Number of Servers:</label>
+                        <input type="number" id="num-servers" name="num-servers" min="1" max="5" value="2">
+                    </div>
+                    <button type="submit">Start Simulation</button>
+                </form>
+            </div>
+            <div class="results">
+                <h2>Simulation Results</h2>
+                <div id="simulation-results"></div>
+                <div id="queue-length-plot"></div>
+                <div id="wait-time-plot"></div>
+                <div id="utilization-plot"></div>
+            </div>
+        </div>
+    </main>
+
+    <script src="static/js/main.js"></script>
+    <script src="static/js/nav.js"></script>
+</body>
+</html> 

@@ -1,0 +1,25 @@
+starbucks_simulation/
+├── backend/
+│   ├── app/
+│   │   ├── __init__.py
+│   │   ├── main.py
+│   │   ├── models/
+│   │   │   ├── epidemic.py
+│   │   │   └── simulation.py
+│   │   ├── routers/
+│   │   └── services/
+│   │       ├── epidemic_simulation.py
+│   │       └── queue_simulation.py
+│   ├── requirements.txt
+│   └── tests/
+├── frontend/
+│   ├── static/
+│   │   ├── css/
+│   │   ├── js/
+│   │   │   ├── main.js
+│   │   │   └── epidemic.js
+│   │   └── images/
+│   ├── templates/
+│   ├── index.html
+│   └── epidemic.html
+└── README.md 

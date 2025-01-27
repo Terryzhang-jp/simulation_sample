@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Epidemic Simulation</title>
+    <link rel="stylesheet" href="static/css/style.css">
+    <style>
+        #simulation-canvas {
+            border: 1px solid #ddd;
+            background: #fff;
+            width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+        }
+        .controls {
+            margin: 20px 0;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .visualization-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 20px;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .left-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .right-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .population-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+        .stat-box {
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .stat-box h3 {
+            margin: 0;
+            font-size: 1rem;
+            color: #333;
+        }
+        .stat-box p {
+            margin: 10px 0 0;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        .trend-charts {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .chart-container {
+            background: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .chart-container h3 {
+            margin: 0 0 15px 0;
+            font-size: 1rem;
+            color: #333;
+            text-align: center;
+        }
+        .susceptible { background: #b8e6ff; }
+        .infected { background: #ffb8b8; }
+        .recovered { background: #b8ffb8; }
+        .deceased { background: #e6e6e6; }
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+        }
+        .main-view h3 {
+            margin: 0 0 15px 0;
+            color: #333;
+        }
+        .day-counter-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        .day-counter {
+            background: #f0f0f0;
+            padding: 15px 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .day-counter h3 {
+            margin: 0;
+            color: #333;
+            font-size: 1.1rem;
+        }
+        .day-counter p {
+            margin: 10px 0 0;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        small {
+            display: block;
+            color: #666;
+            font-size: 0.8em;
+            margin-top: 4px;
+        }
+        .charts {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .additional-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        .stat-item {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+            text-align: center;
+        }
+        .stat-item h4 {
+            margin: 0;
+            color: #666;
+            font-size: 0.9em;
+        }
+        .stat-item p {
+            margin: 5px 0 0;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav-header">
+        <div class="nav-container">
+            <a href="/" class="nav-logo">Simulation Studies</a>
+            <div class="nav-links">
+                <a href="index.html">Queue Simulation</a>
+                <a href="epidemic.html" class="active">Epidemic Simulation</a>
+            </div>
+        </div>
+    </nav>
+
+    <header>
+        <h1>Epidemic Simulation</h1>
+    </header>
+    
+    <main>
+        <div class="simulation-container">
+            <div class="controls">
+                <form id="simulation-form">
+                    <div class="form-group">
+                        <label for="population">Population Size:</label>
+                        <input type="number" id="population" value="200" min="50" max="1000">
+                    </div>
+                    <div class="form-group">
+                        <label for="infection-rate">Infection Rate (%):</label>
+                        <input type="number" id="infection-rate" value="30" min="0" max="100">
+                    </div>
+                    <div class="form-group">
+                        <label for="social-distance">Social Distance:</label>
+                        <input type="number" id="social-distance" value="20" min="5" max="50">
+                    </div>
+                    <div class="form-group">
+                        <label for="social-activity">Social Activity Level (%):</label>
+                        <input type="number" id="social-activity" value="50" min="0" max="100">
+                        <small>Higher values mean more movement and interactions</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="mask-usage">Mask Usage Rate (%):</label>
+                        <input type="number" id="mask-usage" value="50" min="0" max="100">
+                    </div>
+                    <div class="form-group">
+                        <label for="vaccination-rate">Vaccination Rate (%):</label>
+                        <input type="number" id="vaccination-rate" value="30" min="0" max="100">
+                    </div>
+                    <div class="form-group">
+                        <label for="recovery-time">Recovery Time (days):</label>
+                        <input type="number" id="recovery-time" value="14" min="1" max="30">
+                    </div>
+                    <div class="form-group">
+                        <label for="mortality-rate">Mortality Rate (%):</label>
+                        <input type="number" id="mortality-rate" value="2" min="0" max="100">
+                    </div>
+                    <button type="submit">Start Simulation</button>
+                    <button type="button" id="pause-btn">Pause</button>
+                    <button type="button" id="reset-btn">Reset</button>
+                </form>
+            </div>
+
+            <div class="day-counter-container">
+                <div class="stat-box day-counter">
+                    <h3>Current Day</h3>
+                    <p id="day-count">0</p>
+                </div>
+            </div>
+
+            <div class="visualization-grid">
+                <div class="left-panel">
+                    <div class="main-view">
+                        <h3>Simulation View</h3>
+                        <canvas id="simulation-canvas" width="800" height="600"></canvas>
+                    </div>
+                    <div class="population-stats">
+                        <div class="stat-box susceptible">
+                            <h3>Susceptible</h3>
+                            <p id="susceptible-count">191</p>
+                        </div>
+                        <div class="stat-box infected">
+                            <h3>Infected</h3>
+                            <p id="infected-count">0</p>
+                        </div>
+                        <div class="stat-box recovered">
+                            <h3>Recovered</h3>
+                            <p id="recovered-count">0</p>
+                        </div>
+                        <div class="stat-box deceased">
+                            <h3>Deceased</h3>
+                            <p id="deceased-count">0</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="right-panel">
+                    <div class="trend-charts">
+                        <div class="chart-container">
+                            <h3>Susceptible Population Trend</h3>
+                            <canvas id="susceptible-chart"></canvas>
+                        </div>
+                        <div class="chart-container">
+                            <h3>Infected Population Trend</h3>
+                            <canvas id="infected-chart"></canvas>
+                        </div>
+                        <div class="chart-container">
+                            <h3>Recovered Population Trend</h3>
+                            <canvas id="recovered-chart"></canvas>
+                        </div>
+                        <div class="chart-container">
+                            <h3>Deceased Population Trend</h3>
+                            <canvas id="deceased-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="static/js/epidemic.js"></script>
+    <script src="static/js/nav.js"></script>
+</body>
+</html> 

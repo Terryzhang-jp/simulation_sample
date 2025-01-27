@@ -1,0 +1,13 @@
+Metadata-Version: 2.2
+Name: simulation_app
+Version: 0.1
+Requires-Dist: fastapi
+Requires-Dist: uvicorn
+Requires-Dist: numpy
+Requires-Dist: scipy
+Requires-Dist: pandas
+Requires-Dist: python-multipart
+Requires-Dist: plotly
+Requires-Dist: kaleido
+Requires-Dist: python-jose
+Dynamic: requires-dist
